@@ -91,7 +91,10 @@
   const map = L.map('map', {
     center: [35.89, 14.45],
     zoom: 10,
-    layers: [street]
+    layers: [street],
+    scrollWheelZoom: 'center',     // 🌟 Łagodniejsze scrollowanie
+    wheelPxPerZoomLevel: 100,      // 🌟 Zmniejsza czułość kółka myszy (domyślnie 60)
+    zoomSnap: 0.25  
   });
 
   function refreshMapView() {
@@ -116,7 +119,10 @@
       document.getElementById("map-container").classList.add("fullscreen");
       div.style.display = "none";
       zoomClose.getContainer().style.display = "flex";      
-      setTimeout(refreshMapView, 300); // po animacji
+      setTimeout(() => {
+        refreshMapView();          // przeliczenie rozmiaru
+        map.setZoom(map.getZoom()); // trigger odświeżenia kafelków
+      }, 300);
       // ➕ komunikat do Super.so
       parent.postMessage("expandMap", "*");
     };
