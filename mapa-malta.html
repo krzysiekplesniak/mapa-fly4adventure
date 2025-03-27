@@ -1,65 +1,163 @@
-html_code = """
 <!DOCTYPE html>
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <title>Mapa Malta – Satelita + Fade-in</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+  <title>Mapa Malty</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
+      font-family: sans-serif;
     }
-    #map {
+    #map, #modal-map {
+      height: 100%;
       width: 100%;
-      height: 100%;
-      opacity: 0;
-      transition: opacity 0.8s ease;
     }
-    body.loaded #map {
+    #map-container {
+      position: relative;
+      height: 400px;
+      margin: 40px 0;
+    }
+    .fade-in {
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    .fade-in.visible {
       opacity: 1;
+    }
+    #expand-btn {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      z-index: 1000;
+      background: white;
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    #map-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 9999;
+      background: white;
+    }
+    #close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      background: white;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
   </style>
 </head>
 <body>
 
-<div id="map"></div>
+<div id="map-container" class="fade-in">
+  <div id="map"></div>
+  <div id="expand-btn" onclick="openFullMap()">🔍 Powiększ mapę</div>
+</div>
 
-<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" defer></script>
+<!-- Modal fullscreen -->
+<div id="map-modal">
+  <div id="modal-map"></div>
+  <div id="close-btn" onclick="closeFullMap()">✖ Zamknij</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 <script>
-  // Test-map-debugger (może być w <body>)
-  console.log("🧪 Test-map-debugger: rozpoczęcie");
-
-  window.addEventListener("load", () => {
-    document.body.classList.add("loaded");
-
-    const map = L.map('map').setView([35.89, 14.45], 11);
-
-    // Domyślna warstwa
-    const street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    });
-
-    // Satelita (Google)
-    const satellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-      maxZoom: 20,
-      attribution: '© Google'
-    });
-
-    street.addTo(map);
-
-    // Przełącznik warstw
-    const baseMaps = {
-      "Mapa": street,
-      "Satelita": satellite
-    };
-    L.control.layers(baseMaps).addTo(map);
-
-    console.log("✅ Leaflet + warstwy załadowane");
+  // 🌐 Warstwy
+  const street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap'
   });
+
+  const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 19,
+    attribution: 'Tiles &copy; Esri'
+  });
+
+  const points = [
+    { name: "Golden Bay", coords: [35.9335, 14.3444] },
+    { name: "Marsaxlokk", coords: [35.8413, 14.5367] }
+  ];
+
+  // 📌 Inicjalizacja głównej mapy
+  const map = L.map('map', {
+    center: [35.89, 14.45],
+    zoom: 10,
+    layers: [street]
+  });
+
+  // ✅ Przełącznik warstw
+  const baseMaps = {
+    "Mapa": street,
+    "Satelita": satellite
+  };
+  L.control.layers(baseMaps).addTo(map);
+
+  points.forEach(p => {
+    L.marker(p.coords).addTo(map).bindPopup(p.name);
+  });
+
+  map.fitBounds(points.map(p => p.coords), { padding: [20, 20] });
+
+  // 👀 Fade-in mapka
+  window.addEventListener("load", () => {
+    document.getElementById("map-container").classList.add("visible");
+  });
+
+  // 🗺️ Modal – fullscreen mapa
+  let modalMap = null;
+  function openFullMap() {
+    const modal = document.getElementById("map-modal");
+    modal.style.display = "block";
+
+    setTimeout(() => {
+      if (!modalMap) {
+        modalMap = L.map("modal-map", {
+          center: [35.89, 14.45],
+          zoom: 11,
+          layers: [street]
+        });
+        L.control.layers(baseMaps).addTo(modalMap);
+
+        points.forEach(p => {
+          L.marker(p.coords).addTo(modalMap).bindPopup(p.name);
+        });
+
+        modalMap.fitBounds(points.map(p => p.coords), { padding: [20, 20] });
+      } else {
+        modalMap.invalidateSize();
+      }
+    }, 200);
+  }
+
+  function closeFullMap() {
+    document.getElementById("map-modal").style.display = "none";
+  }
+
+ setTimeout(() => {
+   const tiles = document.querySelectorAll('.leaflet-tile');
+   if (tiles.length === 0) {
+     console.warn('❌ Mapa się nie załadowała!');
+     document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;top:20px;left:20px;background:#fdd;padding:10px;border:1px solid #900;">❌ Mapa nie działa. Spróbuj odświeżyć.</div>');
+   } else {
+     console.log('✅ Mapka działa prawidłowo – kafelki załadowane');
+   }
+ }, 1500);
+
 </script>
 
 </body>
