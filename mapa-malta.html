@@ -10,17 +10,8 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      font-family: sans-serif;
       background: #c1e2ed;
-    }
-    #map-container {
-      position: relative;
-      height: 450px;
-      transition: height 0.4s ease;
-      overflow: hidden;
-    }
-    #map-container.fullscreen {
-      height: 100vh !important;
+      font-family: sans-serif;
     }
     #map {
       height: 100%;
@@ -44,102 +35,72 @@
   </style>
 </head>
 <body>
-
-<div id="map-container">
   <div id="map"></div>
-</div>
 
-<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-<script>
-  const street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; OpenStreetMap contributors'
-  });
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script>
+    const street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    });
 
-  const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 19,
-    attribution: 'Tiles &copy; Esri'
-  });
+    const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19,
+      attribution: 'Tiles &copy; Esri'
+    });
 
-  const baseMaps = {
-    "Mapa": street,
-    "Satelita": satellite
-  };
+    const baseMaps = {
+      "Mapa": street,
+      "Satelita": satellite
+    };
 
-  const points = [
-    { name: "Golden Bay", coords: [35.9335, 14.3444] },
-    { name: "Marsaxlokk", coords: [35.8413, 14.5367] }
-  ];
+    const points = [
+      { name: "Golden Bay", coords: [35.9335, 14.3444] },
+      { name: "Marsaxlokk", coords: [35.8413, 14.5367] }
+    ];
 
-  const map = L.map('map', {
-    center: [35.89, 14.45],
-    zoom: 10,
-    layers: [street]
-  });
+    const map = L.map('map', {
+      center: [35.89, 14.45],
+      zoom: 10,
+      layers: [street]
+    });
 
-  L.control.layers(baseMaps).addTo(map);
+    L.control.layers(baseMaps).addTo(map);
 
-  points.forEach(p => {
-    L.marker(p.coords).addTo(map).bindPopup(p.name);
-  });
+    points.forEach(p => {
+      L.marker(p.coords).addTo(map).bindPopup(p.name);
+    });
 
-  map.fitBounds(points.map(p => p.coords), { padding: [20, 20] });
+    map.fitBounds(points.map(p => p.coords), { padding: [20, 20] });
 
-  let zoomExpand, zoomClose;
-
-  function addControls() {
-    zoomExpand = L.control({ position: 'topleft' });
+    // Powiększ
+    const zoomExpand = L.control({ position: 'topleft' });
     zoomExpand.onAdd = () => {
-      const div = L.DomUtil.create('div', 'leaflet-control leaflet-control-custom');
-      div.id = 'expandBtn';
+      const div = L.DomUtil.create('div', 'leaflet-control leaflet-control-custom', 'expand-btn');
       div.innerHTML = '🔍 Powiększ mapę';
       div.onclick = () => {
-        document.getElementById("map-container").classList.add("fullscreen");
-        toggleButtons(true);
-        setTimeout(() => map.invalidateSize(), 300);
+        window.parent.postMessage({ type: 'expandMap' }, '*');
+        div.style.display = 'none';
+        document.querySelector('.close-btn')?.style.setProperty('display', 'flex');
       };
       return div;
     };
     zoomExpand.addTo(map);
 
-    zoomClose = L.control({ position: 'topleft' });
+    // Zamknij
+    const zoomClose = L.control({ position: 'topleft' });
     zoomClose.onAdd = () => {
-      const div = L.DomUtil.create('div', 'leaflet-control leaflet-control-custom');
-      div.id = 'closeBtn';
+      const div = L.DomUtil.create('div', 'leaflet-control leaflet-control-custom close-btn');
       div.innerHTML = '❌ Zamknij';
       div.style.display = 'none';
       div.onclick = () => {
-        document.getElementById("map-container").classList.remove("fullscreen");
-        toggleButtons(false);
-        setTimeout(() => map.invalidateSize(), 300);
+        window.parent.postMessage({ type: 'collapseMap' }, '*');
+        div.style.display = 'none';
+        document.querySelector('.expand-btn')?.style.setProperty('display', 'flex');
       };
       return div;
     };
     zoomClose.addTo(map);
-  }
-
-  function toggleButtons(isFullscreen) {
-    const expand = document.getElementById("expandBtn");
-    const close = document.getElementById("closeBtn");
-    if (expand && close) {
-      expand.style.display = isFullscreen ? "none" : "flex";
-      close.style.display = isFullscreen ? "flex" : "none";
-    }
-  }
-
-  addControls();
-
-  // 🧠 Test mapy
-  setTimeout(() => {
-    const tiles = document.querySelectorAll('.leaflet-tile');
-    if (tiles.length === 0) {
-      console.warn('❌ Mapa się nie załadowała!');
-      document.body.insertAdjacentHTML('beforeend',
-        '<div style="position:fixed;top:20px;left:20px;background:#fdd;padding:10px;border:1px solid #900;z-index:9999;">❌ Mapa nie działa. Spróbuj odświeżyć.</div>');
-    } else {
-      console.log('✅ Mapa działa prawidłowo – kafelki załadowane');
-    }
-  }, 1500);
-</script>
+  </script>
 </body>
 </html>
