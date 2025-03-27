@@ -83,33 +83,51 @@
     L.marker(p.coords).addTo(map).bindPopup(p.name);
   });
 
-  map.fitBounds(points.map(p => p.coords), { padding: [40, 40] }); // odrobinę mniejsza mapa
+  map.fitBounds(points.map(p => p.coords), { padding: [20, 20] });
 
-  // 🔍 Przycisk „Powiększ mapę”
-  const zoomExpand = L.control({ position: 'topleft' });
-  zoomExpand.onAdd = () => {
-    const div = L.DomUtil.create('div', 'leaflet-control leaflet-control-custom');
-    div.innerHTML = '🔍 Powiększ mapę';
-    div.onclick = () => {
-      document.getElementById("map-container").classList.add("fullscreen");
-      setTimeout(() => map.invalidateSize(), 300);
-    };
-    return div;
-  };
-  zoomExpand.addTo(map);
+  let zoomExpand, zoomClose;
 
-  // ❌ Przycisk „Zamknij”
-  const zoomClose = L.control({ position: 'topleft' });
-  zoomClose.onAdd = () => {
-    const div = L.DomUtil.create('div', 'leaflet-control leaflet-control-custom');
-    div.innerHTML = '❌ Zamknij';
-    div.onclick = () => {
-      document.getElementById("map-container").classList.remove("fullscreen");
-      setTimeout(() => map.invalidateSize(), 300);
+  function addControls() {
+    zoomExpand = L.control({ position: 'topleft' });
+    zoomExpand.onAdd = () => {
+      const div = L.DomUtil.create('div', 'leaflet-control leaflet-control-custom');
+      div.id = 'expandBtn';
+      div.innerHTML = '🔍 Powiększ mapę';
+      div.onclick = () => {
+        document.getElementById("map-container").classList.add("fullscreen");
+        toggleButtons(true);
+        setTimeout(() => map.invalidateSize(), 300);
+      };
+      return div;
     };
-    return div;
-  };
-  zoomClose.addTo(map);
+    zoomExpand.addTo(map);
+
+    zoomClose = L.control({ position: 'topleft' });
+    zoomClose.onAdd = () => {
+      const div = L.DomUtil.create('div', 'leaflet-control leaflet-control-custom');
+      div.id = 'closeBtn';
+      div.innerHTML = '❌ Zamknij';
+      div.style.display = 'none';
+      div.onclick = () => {
+        document.getElementById("map-container").classList.remove("fullscreen");
+        toggleButtons(false);
+        setTimeout(() => map.invalidateSize(), 300);
+      };
+      return div;
+    };
+    zoomClose.addTo(map);
+  }
+
+  function toggleButtons(isFullscreen) {
+    const expand = document.getElementById("expandBtn");
+    const close = document.getElementById("closeBtn");
+    if (expand && close) {
+      expand.style.display = isFullscreen ? "none" : "flex";
+      close.style.display = isFullscreen ? "flex" : "none";
+    }
+  }
+
+  addControls();
 
   // 🧠 Test mapy
   setTimeout(() => {
@@ -119,10 +137,9 @@
       document.body.insertAdjacentHTML('beforeend',
         '<div style="position:fixed;top:20px;left:20px;background:#fdd;padding:10px;border:1px solid #900;z-index:9999;">❌ Mapa nie działa. Spróbuj odświeżyć.</div>');
     } else {
-      console.log('✅ Mapka działa prawidłowo – kafelki załadowane');
+      console.log('✅ Mapa działa prawidłowo – kafelki załadowane');
     }
   }, 1500);
 </script>
-
 </body>
 </html>
