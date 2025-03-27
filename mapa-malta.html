@@ -7,46 +7,58 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
   <style>
     body { margin: 0; font-family: sans-serif; }
-    #map, #modal-map { height: 100%; width: 100%; }
-    #map-container { position: relative; height: 400px; margin: 40px 0; }
+    #map, #modal-map { width: 100%; height: 100%; }
+
+    #map-container {
+      position: relative;
+      height: 400px;
+      margin: 40px 0;
+    }
+
     .fade-in { opacity: 0; transition: opacity 0.6s ease; }
     .fade-in.visible { opacity: 1; }
 
     #expand-btn {
-      position: absolute; bottom: 10px; left: 10px;
-      z-index: 1000; background: white;
-      padding: 6px 10px; border: 1px solid #ccc;
-      border-radius: 4px; cursor: pointer;
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      z-index: 1000;
+      background: white;
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
       font-size: 14px;
     }
 
     #map-modal {
-      display: none; position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      z-index: 9999; background: white;
-      opacity: 0; transition: opacity 0.3s ease;
-      pointer-events: none;
-    }
-
-    #map-modal.show {
-      display: block;
-      opacity: 1;
-      pointer-events: auto;
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: white;
+      z-index: 9999;
     }
 
     #close-btn {
-      position: absolute; top: 20px; right: 20px;
-      z-index: 10000; background: white;
-      border: 1px solid #aaa; border-radius: 6px;
-      padding: 8px 12px; font-size: 16px;
-      font-weight: 600; cursor: pointer;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      background: white;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
   </style>
 </head>
 <body>
 
-<!-- 📍 Widok zminiaturyzowany -->
+<!-- 🗺️ Główna mapa -->
 <div id="map-container" class="fade-in">
   <div id="map"></div>
   <div id="expand-btn" onclick="openFullMap()">🔍 Powiększ mapę</div>
@@ -58,12 +70,13 @@
   <div id="close-btn" onclick="closeFullMap()">✖ Zamknij</div>
 </div>
 
+<!-- 📜 Leaflet + logika -->
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 <script>
-  // 🌐 Warstwy bazowe
+  // 🌍 Warstwy map
   const street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
-    attribution: '&copy; OpenStreetMap'
+    attribution: '&copy; OpenStreetMap contributors'
   });
 
   const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -71,7 +84,6 @@
     attribution: 'Tiles &copy; Esri'
   });
 
-  // 📍 Przykładowe punkty
   const points = [
     { name: "Golden Bay", coords: [35.9335, 14.3444] },
     { name: "Marsaxlokk", coords: [35.8413, 14.5367] }
@@ -84,22 +96,23 @@
     layers: [street]
   });
 
-  const baseMaps = { "Mapa": street, "Satelita": satellite };
-  L.control.layers(baseMaps).addTo(map);
+  L.control.layers({ "Mapa": street, "Satelita": satellite }).addTo(map);
 
-  points.forEach(p => L.marker(p.coords).addTo(map).bindPopup(p.name));
+  points.forEach(p => {
+    L.marker(p.coords).addTo(map).bindPopup(p.name);
+  });
+
   map.fitBounds(points.map(p => p.coords), { padding: [20, 20] });
 
-  // 🔄 Fade-in efekt
+  // ✅ Fade-in po załadowaniu
   window.addEventListener("load", () => {
     document.getElementById("map-container").classList.add("visible");
   });
 
-  // 🧱 Modal: fullscreen mapa
+  // 🧱 Modal fullscreen
   let modalMap = null;
   function openFullMap() {
-    const modal = document.getElementById("map-modal");
-    modal.classList.add("show");
+    document.getElementById("map-modal").style.display = "block";
 
     setTimeout(() => {
       if (!modalMap) {
@@ -108,8 +121,13 @@
           zoom: 11,
           layers: [street]
         });
-        L.control.layers(baseMaps).addTo(modalMap);
-        points.forEach(p => L.marker(p.coords).addTo(modalMap).bindPopup(p.name));
+
+        L.control.layers({ "Mapa": street, "Satelita": satellite }).addTo(modalMap);
+
+        points.forEach(p => {
+          L.marker(p.coords).addTo(modalMap).bindPopup(p.name);
+        });
+
         modalMap.fitBounds(points.map(p => p.coords), { padding: [20, 20] });
       } else {
         modalMap.invalidateSize();
@@ -118,11 +136,10 @@
   }
 
   function closeFullMap() {
-    document.getElementById("map-modal").classList.remove("show");
-    console.log("✅ Zamknięto modal");
+    document.getElementById("map-modal").style.display = "none";
   }
 
-  // 🧪 Checker działania mapy
+  // 🧪 Test kafelków
   setTimeout(() => {
     const tiles = document.querySelectorAll('.leaflet-tile');
     if (tiles.length === 0) {
