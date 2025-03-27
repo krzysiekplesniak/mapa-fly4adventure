@@ -94,6 +94,11 @@
     layers: [street]
   });
 
+  function refreshMapView() {
+    map.invalidateSize(); // przeliczenie rozmiaru kontenera
+    map.fitBounds(points.map(p => p.coords), { padding: [100, 100] });
+  }
+
   L.control.layers(baseMaps).addTo(map);
 
   points.forEach(p => {
@@ -110,10 +115,8 @@
     div.onclick = () => {
       document.getElementById("map-container").classList.add("fullscreen");
       div.style.display = "none";
-      zoomClose.getContainer().style.display = "flex";
-      map.invalidateSize();
-      map.setZoom(map.getZoom()); // forcing rerender
-      map.fitBounds(points.map(p => p.coords), { padding: [100, 100] });
+      zoomClose.getContainer().style.display = "flex";      
+      setTimeout(refreshMapView, 300); // po animacji
       // ➕ komunikat do Super.so
       parent.postMessage("expandMap", "*");
     };
@@ -139,12 +142,15 @@
   };
   zoomClose.addTo(map);
 
-  
-  // ✅ To pozwoli Leafletowi ponownie przeliczyć widoczny obszar i dograć kafelki, również od dołu.
-  setTimeout(() => {
-    map.invalidateSize();
-    map.setZoom(map.getZoom()); // jeszcze raz, po animacji
-  }, 500);
+  // Alternatywa do checkTileLoad()
+  function checkTileLoad() {
+    const tiles = document.querySelectorAll('.leaflet-tile');
+    if (tiles.length === 0) {
+      console.warn('❌ Brak kafelków — mapa może być offline.');
+    }
+  }
+
+  setTimeout(checkTileLoad, 2000).
 
   // ✅ Sprawdź ładowanie kafelków
   setTimeout(() => {
