@@ -6,18 +6,20 @@
   <title>Mapa Malty</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
   <style>
-    body { margin: 0; font-family: sans-serif; }
-    #map, #modal-map { width: 100%; height: 100%; }
-
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
     #map-container {
       position: relative;
-      height: 400px;
-      margin: 40px 0;
+      height: 420px;
+      width: 100%;
     }
-
-    .fade-in { opacity: 0; transition: opacity 0.6s ease; }
-    .fade-in.visible { opacity: 1; }
-
+    #map, #modal-map {
+      width: 100%;
+      height: 100%;
+    }
     #expand-btn {
       position: absolute;
       bottom: 10px;
@@ -30,16 +32,21 @@
       cursor: pointer;
       font-size: 14px;
     }
-
     #map-modal {
-      display: none;
       position: fixed;
       top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      width: 100vw;
+      height: 100vh;
       background: white;
       z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
     }
-
+    #map-modal.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
     #close-btn {
       position: absolute;
       top: 20px;
@@ -58,45 +65,36 @@
 </head>
 <body>
 
-<!-- 🗺️ Główna mapa -->
-<div id="map-container" class="fade-in">
+<!-- 🔍 Widok miniaturowy -->
+<div id="map-container">
   <div id="map"></div>
   <div id="expand-btn" onclick="openFullMap()">🔍 Powiększ mapę</div>
 </div>
 
-<!-- 🧱 Modal fullscreen -->
+<!-- 🧱 Modal full screen -->
 <div id="map-modal">
   <div id="modal-map"></div>
   <div id="close-btn" onclick="closeFullMap()">✖ Zamknij</div>
 </div>
 
-<!-- 📜 Leaflet + logika -->
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 <script>
-  // 🌍 Warstwy map
-  const street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; OpenStreetMap contributors'
-  });
-
-  const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 19,
-    attribution: 'Tiles &copy; Esri'
-  });
+  let modalMapInstance = null;
 
   const points = [
     { name: "Golden Bay", coords: [35.9335, 14.3444] },
     { name: "Marsaxlokk", coords: [35.8413, 14.5367] }
   ];
 
-  // 🗺️ Główna mapa
-  const map = L.map('map', {
+  // 🗺️ Mała mapa
+  const map = L.map("map", {
     center: [35.89, 14.45],
-    zoom: 10,
-    layers: [street]
+    zoom: 10
   });
 
-  L.control.layers({ "Mapa": street, "Satelita": satellite }).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
 
   points.forEach(p => {
     L.marker(p.coords).addTo(map).bindPopup(p.name);
@@ -104,42 +102,40 @@
 
   map.fitBounds(points.map(p => p.coords), { padding: [20, 20] });
 
-  // ✅ Fade-in po załadowaniu
-  window.addEventListener("load", () => {
-    document.getElementById("map-container").classList.add("visible");
-  });
-
-  // 🧱 Modal fullscreen
-  let modalMap = null;
+  // 🔍 Fullscreen mapa
   function openFullMap() {
-    document.getElementById("map-modal").style.display = "block";
+    const modal = document.getElementById("map-modal");
+    modal.classList.add("show");
 
     setTimeout(() => {
-      if (!modalMap) {
-        modalMap = L.map("modal-map", {
+      if (!modalMapInstance) {
+        modalMapInstance = L.map("modal-map", {
           center: [35.89, 14.45],
-          zoom: 11,
-          layers: [street]
+          zoom: 11
         });
 
-        L.control.layers({ "Mapa": street, "Satelita": satellite }).addTo(modalMap);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(modalMapInstance);
 
         points.forEach(p => {
-          L.marker(p.coords).addTo(modalMap).bindPopup(p.name);
+          L.marker(p.coords).addTo(modalMapInstance).bindPopup(p.name);
         });
 
-        modalMap.fitBounds(points.map(p => p.coords), { padding: [20, 20] });
-      } else {
-        modalMap.invalidateSize();
+        modalMapInstance.fitBounds(points.map(p => p.coords), { padding: [20, 20] });
       }
-    }, 300);
+
+      setTimeout(() => {
+        modalMapInstance.invalidateSize();
+      }, 300);
+    }, 100);
   }
 
   function closeFullMap() {
-    document.getElementById("map-modal").style.display = "none";
+    document.getElementById("map-modal").classList.remove("show");
   }
 
-  // 🧪 Test kafelków
+  // ✅ Debug sprawdzający załadowanie kafelków
   setTimeout(() => {
     const tiles = document.querySelectorAll('.leaflet-tile');
     if (tiles.length === 0) {
