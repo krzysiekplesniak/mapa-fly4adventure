@@ -100,6 +100,7 @@
       div.style.display = "none";
       zoomClose.getContainer().style.display = "flex";
       map.invalidateSize();
+      map.setZoom(map.getZoom()); // forcing rerender
       map.fitBounds(points.map(p => p.coords), { padding: [100, 100] });
       // ➕ komunikat do Super.so
       parent.postMessage("expandMap", "*");
@@ -125,6 +126,13 @@
     return div;
   };
   zoomClose.addTo(map);
+
+  
+  // ✅ To pozwoli Leafletowi ponownie przeliczyć widoczny obszar i dograć kafelki, również od dołu.
+  setTimeout(() => {
+    map.invalidateSize();
+    map.setZoom(map.getZoom()); // jeszcze raz, po animacji
+  }, 500);
 
   // ✅ Sprawdź ładowanie kafelków
   setTimeout(() => {
