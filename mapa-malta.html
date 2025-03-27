@@ -13,15 +13,16 @@
       font-family: sans-serif;
       background: #c1e2ed;
     }
-
+   
     #map-container {
       position: relative;
-      height: 450px;
-      transition: height 0.5s ease;
+      height: 450px;     
+      transition: height 0.5s ease, transform 0.5s ease;
     }
-
+    
     #map-container.fullscreen {
       height: 100vh !important;
+      transform: scale(1.01); /* subtelne "wjechanie" */
     }
 
     #map {
@@ -99,6 +100,7 @@
       div.style.display = "none";
       zoomClose.getContainer().style.display = "flex";
       map.invalidateSize();
+      map.fitBounds(points.map(p => p.coords), { padding: [100, 100] });
       // ➕ komunikat do Super.so
       parent.postMessage("expandMap", "*");
     };
