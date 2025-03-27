@@ -10,13 +10,25 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      background: #c1e2ed;
       font-family: sans-serif;
+      background: #c1e2ed;
     }
+
+    #map-container {
+      position: relative;
+      height: 450px;
+      transition: height 0.5s ease;
+    }
+
+    #map-container.fullscreen {
+      height: 100vh !important;
+    }
+
     #map {
       height: 100%;
       width: 100%;
     }
+
     .leaflet-control-custom {
       background: white;
       border-radius: 4px;
@@ -29,78 +41,101 @@
       align-items: center;
       gap: 6px;
     }
+
     .leaflet-control-custom:hover {
       background: #f5f5f5;
     }
   </style>
 </head>
 <body>
+
+<div id="map-container">
   <div id="map"></div>
+</div>
 
-  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-  <script>
-    const street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contributors'
-    });
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script>
+  const street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  });
 
-    const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 19,
-      attribution: 'Tiles &copy; Esri'
-    });
+  const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 19,
+    attribution: 'Tiles &copy; Esri'
+  });
 
-    const baseMaps = {
-      "Mapa": street,
-      "Satelita": satellite
+  const baseMaps = {
+    "Mapa": street,
+    "Satelita": satellite
+  };
+
+  const points = [
+    { name: "Golden Bay", coords: [35.9335, 14.3444] },
+    { name: "Marsaxlokk", coords: [35.8413, 14.5367] }
+  ];
+
+  const map = L.map('map', {
+    center: [35.89, 14.45],
+    zoom: 10,
+    layers: [street]
+  });
+
+  L.control.layers(baseMaps).addTo(map);
+
+  points.forEach(p => {
+    L.marker(p.coords).addTo(map).bindPopup(p.name);
+  });
+
+  map.fitBounds(points.map(p => p.coords), { padding: [20, 20] });
+
+  // 🔍 Przycisk „Powiększ mapę”
+  const zoomExpand = L.control({ position: 'topleft' });
+  zoomExpand.onAdd = function () {
+    const div = L.DomUtil.create('div', 'leaflet-control leaflet-control-custom');
+    div.innerHTML = `<span>🔍 Powiększ mapę</span>`;
+    div.onclick = () => {
+      document.getElementById("map-container").classList.add("fullscreen");
+      div.style.display = "none";
+      zoomClose.getContainer().style.display = "flex";
+      map.invalidateSize();
+      // ➕ komunikat do Super.so
+      parent.postMessage("expandMap", "*");
     };
+    return div;
+  };
+  zoomExpand.addTo(map);
 
-    const points = [
-      { name: "Golden Bay", coords: [35.9335, 14.3444] },
-      { name: "Marsaxlokk", coords: [35.8413, 14.5367] }
-    ];
-
-    const map = L.map('map', {
-      center: [35.89, 14.45],
-      zoom: 10,
-      layers: [street]
-    });
-
-    L.control.layers(baseMaps).addTo(map);
-
-    points.forEach(p => {
-      L.marker(p.coords).addTo(map).bindPopup(p.name);
-    });
-
-    map.fitBounds(points.map(p => p.coords), { padding: [20, 20] });
-
-    // Powiększ
-    const zoomExpand = L.control({ position: 'topleft' });
-    zoomExpand.onAdd = () => {
-      const div = L.DomUtil.create('div', 'leaflet-control leaflet-control-custom', 'expand-btn');
-      div.innerHTML = '🔍 Powiększ mapę';
-      div.onclick = () => {
-        window.parent.postMessage({ type: 'expandMap' }, '*');
-        div.style.display = 'none';
-        document.querySelector('.close-btn')?.style.setProperty('display', 'flex');
-      };
-      return div;
+  // ❌ Przycisk „Zamknij”
+  const zoomClose = L.control({ position: 'topleft' });
+  zoomClose.onAdd = function () {
+    const div = L.DomUtil.create('div', 'leaflet-control leaflet-control-custom');
+    div.innerHTML = `<span>❌ Zamknij</span>`;
+    div.style.display = "none";
+    div.onclick = () => {
+      document.getElementById("map-container").classList.remove("fullscreen");
+      div.style.display = "none";
+      zoomExpand.getContainer().style.display = "flex";
+      map.invalidateSize();
+      // ➖ komunikat do Super.so
+      parent.postMessage("collapseMap", "*");
     };
-    zoomExpand.addTo(map);
+    return div;
+  };
+  zoomClose.addTo(map);
 
-    // Zamknij
-    const zoomClose = L.control({ position: 'topleft' });
-    zoomClose.onAdd = () => {
-      const div = L.DomUtil.create('div', 'leaflet-control leaflet-control-custom close-btn');
-      div.innerHTML = '❌ Zamknij';
-      div.style.display = 'none';
-      div.onclick = () => {
-        window.parent.postMessage({ type: 'collapseMap' }, '*');
-        div.style.display = 'none';
-        document.querySelector('.expand-btn')?.style.setProperty('display', 'flex');
-      };
-      return div;
-    };
-    zoomClose.addTo(map);
-  </script>
+  // ✅ Sprawdź ładowanie kafelków
+  setTimeout(() => {
+    const tiles = document.querySelectorAll('.leaflet-tile');
+    if (tiles.length === 0) {
+      console.warn('❌ Mapa się nie załadowała!');
+      document.body.insertAdjacentHTML('beforeend',
+        '<div style="position:fixed;top:20px;left:20px;background:#fdd;padding:10px;border:1px solid #900;z-index:9999;">❌ Mapa nie działa. Spróbuj odświeżyć.</div>');
+    } else {
+      console.log('✅ Mapka działa prawidłowo – kafelki załadowane');
+    }
+  }, 1200);
+</script>
+
 </body>
 </html>
