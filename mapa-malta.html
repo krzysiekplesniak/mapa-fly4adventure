@@ -91,38 +91,36 @@
 
   // 🔍 Przycisk „Powiększ mapę”
   const zoomExpand = L.control({ position: 'topleft' });
-  zoomExpand.onAdd = function () {
+  zoomExpand.onAdd = () => {
     const div = L.DomUtil.create('div', 'leaflet-control leaflet-control-custom');
-    div.innerHTML = `<span>🔍 Powiększ mapę</span>`;
+    div.innerHTML = '🔍 Powiększ mapę';
     div.onclick = () => {
-      document.getElementById("map-container").classList.add("fullscreen");
-      div.style.display = "none";
-      zoomClose.getContainer().style.display = "flex";
-      map.invalidateSize();
-      // ➕ komunikat do Super.so
-      parent.postMessage("expandMap", "*");
+      window.parent.postMessage("expandMap", "*");
+      setTimeout(() => {
+        map.invalidateSize();
+        map.fitBounds(points.map(p => p.coords), { padding: [20, 20] });
+      }, 300);
     };
     return div;
   };
   zoomExpand.addTo(map);
-
+  
   // ❌ Przycisk „Zamknij”
   const zoomClose = L.control({ position: 'topleft' });
-  zoomClose.onAdd = function () {
+  zoomClose.onAdd = () => {
     const div = L.DomUtil.create('div', 'leaflet-control leaflet-control-custom');
-    div.innerHTML = `<span>❌ Zamknij</span>`;
-    div.style.display = "none";
+    div.innerHTML = '❌ Zamknij';
     div.onclick = () => {
-      document.getElementById("map-container").classList.remove("fullscreen");
-      div.style.display = "none";
-      zoomExpand.getContainer().style.display = "flex";
-      map.invalidateSize();
-      // ➖ komunikat do Super.so
-      parent.postMessage("collapseMap", "*");
+      window.parent.postMessage("collapseMap", "*");
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 300);
     };
     return div;
   };
+  
   zoomClose.addTo(map);
+
 
   // ✅ Sprawdź ładowanie kafelków
   setTimeout(() => {
