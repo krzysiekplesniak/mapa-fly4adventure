@@ -101,39 +101,31 @@
   };
 
   document.head.appendChild(leafletScript);
-
+  
   function openFullMap() {
-    if (!LReady) return alert("⏳ Mapa jeszcze się ładuje");
-    const modal = document.getElementById("map-modal");
     modal.style.display = "block";
-
+  
+    // ✅ Powiadom stronę nadrzędną (Super.so), żeby zwiększyć iframe
+    if (window.parent !== window) {
+      window.parent.postMessage("expand-map", "*");
+    }
+  
     setTimeout(() => {
       if (!modalMap) {
-        const street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; OpenStreetMap contributors'
-        });
-        const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-          attribution: 'Tiles &copy; Esri'
-        });
-        const baseMaps = { "Mapa": street, "Satelita": satellite };
-
-        const points = [
-          { name: "Golden Bay", coords: [35.9335, 14.3444] },
-          { name: "Marsaxlokk", coords: [35.8413, 14.5367] }
-        ];
-
-        modalMap = L.map('modal-map', {
+        modalMap = L.map("modal-map", {
           center: [35.89, 14.45],
           zoom: 11,
           layers: [street]
         });
-
         L.control.layers(baseMaps).addTo(modalMap);
-        points.forEach(p => L.marker(p.coords).addTo(modalMap).bindPopup(p.name));
+        points.forEach(p => {
+          L.marker(p.coords).addTo(modalMap).bindPopup(p.name);
+        });
         modalMap.fitBounds(points.map(p => p.coords), { padding: [20, 20] });
-
+  
+        // Dodaj przycisk Zamknij
         const closeBtn = L.control({ position: 'topleft' });
-        closeBtn.onAdd = () => {
+        closeBtn.onAdd = function () {
           const div = L.DomUtil.create('div', 'leaflet-control leaflet-control-custom');
           div.innerHTML = '🔙 Zamknij';
           div.onclick = closeFullMap;
