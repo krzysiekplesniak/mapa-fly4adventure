@@ -83,7 +83,7 @@
     L.marker(p.coords).addTo(map).bindPopup(p.name);
   });
 
-  map.fitBounds(points.map(p => p.coords), { padding: [20, 20] });
+  map.fitBounds(points.map(p => p.coords), { padding: [40, 40] }); // odrobinę mniejsza mapa
 
   // 🔍 Przycisk „Powiększ mapę”
   const zoomExpand = L.control({ position: 'topleft' });
@@ -123,5 +123,6 @@
     }
   }, 1500);
 </script>
+
 </body>
 </html>
