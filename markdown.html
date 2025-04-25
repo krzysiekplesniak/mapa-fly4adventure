@@ -2,19 +2,36 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Markdown Embed</title>
+  <title>Markdown Viewer</title>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 20px; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      line-height: 1.7;
+    }
   </style>
 </head>
 <body>
-  <div id="markdown"></div>
-
+  <div id="output">Ładowanie…</div>
   <script>
-    const markdownContent = decodeURIComponent(location.hash.substring(1));
-    document.getElementById('markdown').innerHTML = marked.parse(markdownContent);
+    // Tu definiujemy nazwę pliku markdown
+    const fileName = 'cypr-wprowadzenie.md';
+
+    fetch(`content/${fileName}`)
+      .then(response => {
+        if (!response.ok) throw new Error('Nie udało się wczytać pliku.');
+        return response.text();
+      })
+      .then(md => {
+        document.getElementById('output').innerHTML = marked.parse(md);
+      })
+      .catch(err => {
+        document.getElementById('output').innerHTML = '❌ Błąd ładowania treści.';
+        console.error(err);
+      });
   </script>
 </body>
 </html>
