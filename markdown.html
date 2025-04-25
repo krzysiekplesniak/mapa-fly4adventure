@@ -20,7 +20,7 @@
     // Tu definiujemy nazwę pliku markdown
     const fileName = 'cypr-wprowadzenie.md';
 
-    fetch(`content/${fileName}`)
+    fetch(`/${fileName}`)
       .then(response => {
         if (!response.ok) throw new Error('Nie udało się wczytać pliku.');
         return response.text();
