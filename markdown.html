@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Embed</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 20px; }
+  </style>
+</head>
+<body>
+  <div id="markdown"></div>
+
+  <script>
+    const markdownContent = decodeURIComponent(location.hash.substring(1));
+    document.getElementById('markdown').innerHTML = marked.parse(markdownContent);
+  </script>
+</body>
+</html>
