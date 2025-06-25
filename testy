@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testy osadzania kodu html</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: sans-serif;
+    }
+
+    .map-container {
+      width: 100%;
+      height: 600px;      
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- HERO - zdjęcie tło + tytuł + ocena + intro -->
+    <section class="section-wrapper mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
+      <div class="relative min-h-[280px] overflow-hidden rounded-xl bg-cover bg-center text-white shadow-xl" style="background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1920&q=80');">
+        <div class="absolute inset-0 bg-black/60"></div>
+    
+        <div class="relative z-10 max-w-3xl p-6 sm:p-6 lg:p-10">
+          <h1 class="mb-4 text-3xl leading-tight font-semibold sm:text-4xl">Tawerna 7 St. George's – Autentyczne smaki Cypru</h1>
+    
+          <div class="mb-4 flex items-center gap-2">
+            <span class="flex items-center text-base font-bold text-yellow-400">★ 4.9</span>
+            <span class="text-sm text-white/80">(128 recenzji)</span>
+          </div>
+    
+          <p class="max-w-prose text-sm leading-relaxed text-white/90 sm:text-base">Rodzinna tawerna słynąca z najlepszych tradycyjnych dań i atmosfery jak u babci.</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- DWUKOLUMNOWY LAYOUT: opis + galeria zdjęć -->
+    <div class="section-wrapper mx-auto max-w-6xl px-4 py-6 sm:px-6 md:grid md:grid-cols-[3fr_2fr] md:gap-6 lg:px-8">
+      <!-- LEWA KOLUMNA - opis + galeria -->
+      <div class="card-base space-y-6 rounded-xl bg-white p-6 shadow-xl sm:p-6 lg:p-8">
+        <h2 class="text-2xl leading-tight font-semibold text-gray-900 sm:text-3xl">O tawernie</h2>
+        <p class="text-gray-700">Tawerna 7 St. George's to miejsce, gdzie tradycja spotyka się z gościnnością. Specjalizuje się w lokalnych potrawach, takich jak meze, halloumi i świeże owoce morza, podawane w przyjaznej rodzinnej atmosferze.</p>
+    
+        <!-- Galeria zdjęć -->
+        <div class="gallery-grid grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3">
+          <div class="aspect-w-16 aspect-h-9 col-span-2 overflow-hidden rounded-lg">
+            <img src="https://images.unsplash.com/photo-1568051243859-7a0f3b9d0cbb?auto=format&fit=crop&w=1200&q=80" alt="Cypryjskie dania w tawernie" class="h-48 w-full rounded-lg object-cover md:h-56" />
+          </div>
+    
+          <div class="aspect-w-16 aspect-h-9 relative overflow-hidden rounded-lg">
+            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1200&q=80" alt="Wnętrze tawerny" class="h-48 w-full rounded-lg object-cover md:h-56" />
+          </div>
+    
+          <div class="aspect-w-4 aspect-h-3 overflow-hidden rounded-lg">
+            <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=600&q=80" alt="Grillowana ryba" class="h-full w-full object-cover" />
+          </div>
+    
+          <div class="aspect-w-4 aspect-h-3 overflow-hidden rounded-lg">
+            <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=600&q=80" alt="Halloumi z grilla" class="h-full w-full object-cover" />
+          </div>
+        </div>
+      </div>
+    
+      <!-- PRAWA KOLUMNA - podsumowanie, detale -->
+      <aside class="mt-8 rounded-xl bg-gray-50 p-6 text-sm text-gray-700 shadow-sm sm:p-6 md:mt-0 lg:p-8">
+        <h2 class="mb-4 text-xl font-semibold text-gray-900 sm:text-2xl">Podstawowe informacje</h2>
+    
+        <ul class="space-y-4">
+          <li class="details-line flex items-start gap-3">
+            <span class="mt-1 text-xl">🕒</span>
+            <div>
+              <p class="font-semibold text-gray-900">Godziny otwarcia</p>
+              <p>12:00 – 23:00</p>
+            </div>
+          </li>
+          <li class="details-line flex items-start gap-3">
+            <span class="mt-1 text-xl">📍</span>
+            <div>
+              <p class="font-semibold text-gray-900">Lokalizacja</p>
+              <p>Limassol, Cypr</p>
+            </div>
+          </li>
+          <li class="details-line flex items-start gap-3">
+            <span class="mt-1 text-xl">🍽️</span>
+            <div>
+              <p class="font-semibold text-gray-900">Specjalności</p>
+              <p>Meze, grillowane owoce morza, halloumi</p>
+            </div>
+          </li>
+          <li class="details-line flex items-start gap-3">
+            <span class="mt-1 text-xl">💵</span>
+            <div>
+              <p class="font-semibold text-gray-900">Średni koszt</p>
+              <p>40-60 EUR za osobę</p>
+            </div>
+          </li>
+        </ul>
+    
+        <div class="mt-6">
+          <div class="mb-4 flex items-center gap-2 text-gray-900">
+            <span class="text-lg font-semibold text-yellow-400">★★★★☆</span>
+            <span class="text-lg font-bold">4.7</span>
+            <span class="ml-2 text-sm text-gray-600">(128 opinii)</span>
+          </div>
+          <p class="text-gray-700">Wyjątkowa atmosfera, pyszne jedzenie i profesjonalna obsługa – tak w skrócie opisują tę tawernę goście.</p>
+        </div>
+      </aside>
+    </div>
+    
+    <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+      <article class="mb-12">
+        <h2 class="mb-6 text-2xl leading-tight font-semibold text-gray-900 sm:text-3xl lg:text-4xl">Cypryjskie meze – tradycyjna uczta</h2>
+        <p class="mb-8 text-base leading-relaxed text-gray-800 sm:text-lg">Meze to serce cypryjskiej kuchni — to zestaw małych dań, które pozwalają spróbować różnorodności lokalnych smaków. W restauracjach znajdziesz szeroki wybór meze, które zmieniają się sezonowo i bazują na świeżych, regionalnych produktach.</p>
+        <ul class="mb-8 list-inside list-disc space-y-3 text-gray-700 sm:text-base">
+          <li><strong>Halloumi</strong> – ser grillowany, chrupiący na zewnątrz i kremowy w środku.</li>
+          <li><strong>Kleftiko</strong> – jagnięcina pieczona powoli w glinianym naczyniu, miękka i aromatyczna.</li>
+          <li><strong>Taramosalata</strong> – pasta z ikry, idealna do chleba.</li>
+        </ul>
+        <p class="mb-8 text-base leading-relaxed text-gray-800 sm:text-lg">Lokalne restauracje często serwują meze jako prawdziwą ucztę, gdzie każdy znajdzie coś dla siebie – od warzyw i sałatek, przez mięsa, aż po desery.</p>
+    
+        <h3 class="mb-4 text-xl leading-snug font-semibold text-gray-900 sm:text-2xl lg:text-3xl">Główna Atrakcja First Cliff Walk by Tissot</h3>
+        <p class="mb-6 text-base leading-relaxed text-gray-800 sm:text-lg">First Cliff Walk by Tissot zaczyna się na skalnym szlaku. Prowadzi on początkowo po zachodniej stronie schroniska górskiego i szczytu First wzdłuż stromej ściany skalnej. Winda wznosi odwiedzających na słoneczny taras First. Tutaj zaczyna się 45-metrowy pomost, który wydaje się prowadzić donikąd. W ładny dzień możesz spotkać się z kolejką, gdy będziesz chciał zrobić zdjęcie na końcu pomostu.</p>
+    
+        <p class="mb-6 text-base leading-relaxed text-gray-800 sm:text-lg">Z tego punktu widokowego widok na okoliczne góry jest szczególnie imponujący. Eiger i Jungfrau majestatycznie wznoszą się w sercu regionu Jungfrau. Mnisk nie będzie widoczny z tej perspektywy, ponieważ zakrywa go Eiger.</p>
+      </article>
+    </section>
+  </div>
+</body>
+</html>
+
