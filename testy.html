@@ -7,10 +7,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html, body {
-      width: 100%;
-      height: 100%;
+      width: 100%;      
+      min-height:100%;
       font-family: 'Inter', sans-serif;
-      background-color: #f9fafb;
+      background-color: #f9fafb;      
     }
   </style>
 </head>
@@ -114,6 +114,147 @@
         <p class="mb-6 text-base leading-relaxed text-gray-800 sm:text-lg">First Cliff Walk by Tissot to skalny szlak z widokiem...</p>
       </article>
     </section>
+
+<section class="scroll-slider mx-auto flex max-w-6xl snap-x snap-mandatory space-x-4 overflow-x-auto scroll-smooth px-4 pb-2">
+  <article class="flex max-w-4xl flex-col gap-6 rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-shadow hover:shadow-lg sm:flex-row">
+    <!-- Zdjęcie -->
+    <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1200&q=80" alt="7 St. George’s Tavern" class="h-48 w-full flex-shrink-0 rounded-lg object-cover sm:h-auto sm:w-1/2" loading="lazy" decoding="async" />
+
+    <!-- Tekst -->
+    <div class="flex flex-col justify-between sm:w-2/3">
+      <div>
+        <h2 class="mb-3 text-2xl font-semibold text-gray-900">🍷 7 St. George’s Tavern – Królestwo organicznego meze</h2>
+        <p class="mb-4 leading-relaxed text-gray-700">Jeśli masz ochotę na <strong>autentyczne cypryjskie meze</strong>, ale chcesz, by było ono <strong>zdrowe i ekologiczne</strong>, to 7 St. George’s Tavern w Pafos jest miejscem idealnym. Ta restauracja słynie z <strong>lokalnych, organicznych produktów i braku stałego menu</strong> – potrawy zmieniają się codziennie, w zależności od sezonu i dostępnych składników.</p>
+
+        <h3 class="mb-2 text-lg font-semibold text-gray-800">🍴 Co warto zamówić?</h3>
+        <ul class="mb-4 list-inside list-disc space-y-1 text-gray-700">
+          <li><strong>Cypryjskie meze</strong> – zestaw małych dań, które zaskoczą różnorodnością.</li>
+          <li><strong>Grillowane halloumi</strong> – idealnie chrupiące z zewnątrz, kremowe w środku.</li>
+          <li><strong>Pieczona jagnięcina z ziołami</strong> – aromatyczna i rozpływająca się w ustach.</li>
+        </ul>
+
+        <h3 class="mb-2 text-lg font-semibold text-gray-800">🌿 Czym zachwyca 7 St. George’s Tavern?</h3>
+        <p class="mb-4 leading-relaxed text-gray-700">To restauracja, która stawia na <strong>lokalne smaki i naturalne składniki</strong>. Każde danie jest pełne historii, a obsługa z pasją opowiada o cypryjskich tradycjach kulinarnych.</p>
+
+        <div class="rounded border-l-4 border-gray-300 bg-gray-50 p-3 text-sm text-gray-700"><strong>📌 Wskazówka:</strong> Nie pytaj o menu – kelner po prostu przyniesie Ci to, co najlepsze danego dnia!</div>
+      </div>
+
+      <!-- Opinie -->
+      <div class="mt-6 flex items-center gap-4 text-sm text-gray-700">
+        <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-green-200 font-semibold text-green-800" aria-label="Norman John" title="Norman John"> N </span>
+        <div>
+          <p class="font-semibold">Norman John, traveled in May</p>
+          <p class="font-semibold text-yellow-400">★★★★★ 5.0</p>
+        </div>
+        <div class="ml-auto flex items-center gap-1">
+          <span class="font-semibold">4.8</span>
+          <span class="text-yellow-400">★★★★☆</span>
+          <span class="opacity-80">(132 Recenzje)</span>
+        </div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<div class="section-wrapper mx-auto max-w-6xl px-4 py-6 sm:px-6 md:grid md:grid-cols-[3fr_2fr] md:gap-6 lg:px-8">
+  <!-- Lewa kolumna -->
+  <div class="card-base space-y-6 rounded-xl bg-white p-6 shadow-xl sm:p-6 lg:p-8">
+    <div>
+      <h1 class="mb-3 text-2xl leading-tight font-semibold text-gray-900 sm:text-3xl md:text-4xl">5 miejsc na Korfu, które musisz zobaczyć</h1>
+      <div class="flex flex-wrap items-center gap-2 text-sm text-gray-600 sm:text-base">
+        <span class="rating flex items-center text-base font-bold text-yellow-400">★★★★ 4.0</span>
+        <a href="#" class="underline hover:text-blue-600">Nasza ocena</a>
+        <span>·</span>
+        <span class="font-semibold">5 dni</span>
+        <span>· Must Have dla wszystkich <span class="font-semibold"> Korfu</span></span>
+      </div>
+    </div>
+
+    <div class="gallery-grid grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3">
+      <!-- Duże zdjęcie z badge -->
+      <div class="aspect-w-16 aspect-h-9 col-span-2 relative overflow-hidden rounded-lg">
+        <img src="https://contentapi-swissactivities.imgix.net/contentapi.swissactivities/04_Museum_Zuerich_Tourismus_55d466d006.jpg?w=1200" alt="Museum" class="h-48 w-full rounded-lg object-cover md:h-56" />
+        <span class="badge absolute top-3 left-3 bg-blue-600 px-3 py-0.5 text-white rounded font-semibold text-sm shadow">Muzeum</span>
+      </div>
+
+      <!-- Miniatura z ikonami -->
+      <div class="aspect-w-16 aspect-h-9 relative overflow-hidden rounded-lg">
+        <img src="https://contentapi-swissactivities.imgix.net/contentapi.swissactivities/Stadtfuehrung_Zuerich_Tourismus_3f7bad6ffe.jpg?w=1200" alt="City tour" class="h-48 w-full rounded-lg object-cover md:h-56" />
+        <div class="absolute bottom-2 left-2 flex flex-wrap gap-2">
+          <span class="rounded bg-green-600 px-2 py-0.5 text-white text-xs font-semibold shadow">Wycieczka</span>
+          <span class="rounded bg-yellow-400 px-2 py-0.5 text-white text-xs font-semibold shadow">Polecane</span>
+        </div>
+      </div>
+
+      <!-- Małe zdjęcia -->
+      <div class="aspect-w-4 aspect-h-3 overflow-hidden rounded-lg">
+        <img src="https://contentapi-swissactivities.imgix.net/contentapi.swissactivities/04_Museum_Zuerich_Tourismus_55d466d006.jpg?w=1200" alt="Muzeum" class="h-full w-full object-cover" />
+      </div>
+      <div class="aspect-w-4 aspect-h-3 overflow-hidden rounded-lg">
+        <img src="https://contentapi-swissactivities.imgix.net/contentapi.staging.swissactivities/a44b2d95c5f2bd086cc91479d754b66d.jpg?auto=format&fit=crop&w=600&q=80" alt="Lindt" class="h-full w-full object-cover" />
+      </div>
+
+      <!-- Opinie z awatarem -->
+      <div class="aspect-w-4 aspect-h-5 flex flex-col justify-between rounded-lg bg-blue-50 p-4 sm:p-5">
+        <p class="mb-3 text-sm leading-relaxed italic text-blue-900">„Trasa była bardzo spokojna, idealna na leniwy dzień. Widoki z punktu na końcu to absolutny hit.”</p>
+        <div class="flex items-center gap-3">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-sm font-semibold text-green-700">M</span>
+          <div class="flex flex-col">
+            <span class="text-sm font-semibold text-gray-900">Magda, maj 2024</span>
+            <div class="flex items-center gap-1 text-sm text-yellow-500">
+              ★★★★☆
+              <span class="text-xs text-gray-500">(5.0)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prawa kolumna -->
+  <div class="mt-8 space-y-6 rounded-xl bg-gray-50 p-6 text-sm text-gray-700 shadow-sm sm:p-6 md:mt-0 lg:p-8">
+    <h2 class="mb-4 text-xl font-semibold text-gray-900 sm:text-2xl">Najważniejsze w skrócie</h2>
+    <p class="text-sm leading-relaxed text-gray-700">Korfu to wyspa, która łączy grecki klimat z wpływami weneckimi, francuskimi i brytyjskimi. Znajdziesz tu zarówno zabytkowe fortyfikacje i pałace, jak i klimatyczne klasztory położone wśród malowniczych krajobrazów. Oto pięć miejsc, które warto wpisać na swoją listę!</p>
+    <ul class="space-y-3 pt-2">
+      <li class="details-line flex items-start gap-3">
+        <span class="text-x mt-1">📍</span>
+        <div>
+          <p class="font-semibold text-gray-900">Korfu Town (Kerkyra)</p>
+          <p class="text-gray-700">Stolica pełna weneckiego uroku 🏙️</p>
+        </div>
+      </li>
+      <li class="details-line flex items-start gap-3">
+        <span class="text-x mt-1">📍</span>
+        <div>
+          <p class="font-semibold text-gray-900">Stara Forteca</p>
+          <p class="text-gray-700">Potężne mury z widokiem na miasto 🏰</p>
+        </div>
+      </li>
+      <li class="details-line flex items-start gap-3">
+        <span class="text-x mt-1">📍</span>
+        <div>
+          <p class="font-semibold text-gray-900">Pałac Achillion</p>
+          <p class="text-gray-700">Rezydencja cesarzowej Sisi i piękne ogrody 🏛️</p>
+        </div>
+      </li>
+      <li class="details-line flex items-start gap-3">
+        <span class="text-x mt-1">📍</span>
+        <div>
+          <p class="font-semibold text-gray-900">Nowa Twierdza</p>
+          <p class="text-gray-700">Monumentalna fortyfikacja z panoramą na starówkę 🏰</p>
+        </div>
+      </li>
+      <li class="details-line flex items-start gap-3">
+        <span class="text-x mt-1">📍</span>
+        <div>
+          <p class="font-semibold text-gray-900">Klasztor Paleokastritsa</p>
+          <p class="text-gray-700">Duchowe miejsce z widokiem na turkusowe zatoki ⛪</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
   </main>
 </body>
 </html>
